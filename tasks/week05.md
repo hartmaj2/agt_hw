@@ -12,4 +12,4 @@ See `templates/week05.py` for function definitions and docstrings describing exp
 
 # Week 5 Tests
 
-Execute `pytest tests/test_week05.py` to test your solutions against our reference implementations.
+Execute `pytest tests/test_week05_classic.py tests/test_week05_random.py` to test your solutions against our reference implementations.

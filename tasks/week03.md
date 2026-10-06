@@ -16,4 +16,4 @@ See `templates/week03.py` for function definitions and docstrings describing exp
 
 # Week 3 Tests
 
-Execute `pytest tests/test_week03.py` to test your solutions against our reference implementations.
+Execute `pytest tests/test_week03_classic.py tests/test_week03_random.py` to test your solutions against our reference implementations.

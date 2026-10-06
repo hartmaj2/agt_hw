@@ -12,4 +12,4 @@ See `templates/week04.py` for function definitions and docstrings describing exp
 
 # Week 4 Tests
 
-Execute `pytest tests/test_week04.py` to test your solutions against our reference implementations.
+Execute `pytest tests/test_week04_classic.py tests/test_week04_random.py` to test your solutions against our reference implementations.

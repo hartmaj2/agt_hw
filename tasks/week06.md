@@ -10,4 +10,4 @@ See `templates/week06.py` for function definitions and docstrings describing exp
 
 # Week 6 Tests
 
-Execute `pytest tests/test_week06.py` to test your solutions against our reference implementations.
+Execute `pytest tests/test_week06_classic.py tests/test_week06_random.py` to test your solutions against our reference implementations.

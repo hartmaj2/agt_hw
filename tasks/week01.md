@@ -26,4 +26,4 @@ See `templates/week01.py` for function definitions and docstrings describing exp
 
 # Week 1 Tests
 
-Execute `pytest tests/test_week01.py` to test your solutions against our reference implementations.
+Execute `pytest tests/test_week01_classic.py tests/test_week01_random.py` to test your solutions against our reference implementations.
