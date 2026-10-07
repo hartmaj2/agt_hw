@@ -180,6 +180,18 @@ def find_strictly_dominated_actions(matrix: np.ndarray) -> np.ndarray:
                 break
     return np.array(indices,dtype=np.int64)
 
+def find_strictly_dominated_actions_ignore(matrix : np.ndarray, rows_ignore : np.ndarray, cols_ignore : np.ndarray) -> np.ndarray:
+    indices = []
+    cols_keep = np.setdiff1d(np.arange(matrix.shape[1]), cols_ignore)
+    rows_keep = np.setdiff1d(np.arange(matrix.shape[0]), rows_ignore)
+    for i in rows_keep:
+        util_vect_i = matrix[i, cols_keep]
+        for j in rows_keep:
+            util_vect_j = matrix[j, cols_keep]
+            if np.all(util_vect_j > util_vect_i):
+                indices.append(i)
+                break
+    return np.array(indices,dtype=np.int64)
 
 def iterated_removal_of_dominated_strategies(
     row_matrix: np.ndarray, col_matrix: np.ndarray
@@ -199,7 +211,26 @@ def iterated_removal_of_dominated_strategies(
         Four-tuple of reduced row and column payoff matrices, and remaining row and column actions
     """
 
-    raise NotImplementedError
+    rows_ignore = np.array([],dtype=np.int64)
+    cols_ignore = np.array([],dtype=np.int64)
+
+    while True:
+        row_indices = find_strictly_dominated_actions_ignore(row_matrix,rows_ignore,cols_ignore)
+        col_indices = find_strictly_dominated_actions_ignore(col_matrix.T,cols_ignore,rows_ignore) # parameters changed places because of transpose
+
+        if row_indices.size == 0 and col_indices.size == 0:
+            break
+
+        rows_ignore = np.union1d(rows_ignore,row_indices)
+        cols_ignore = np.union1d(cols_ignore,col_indices)
+
+    rows_keep = np.setdiff1d(np.arange(row_matrix.shape[0]), rows_ignore)
+    cols_keep = np.setdiff1d(np.arange(col_matrix.shape[1]), cols_ignore)
+
+    reduced_row_matrix = row_matrix[np.ix_(rows_keep, cols_keep)]
+    reduced_col_matrix = col_matrix[np.ix_(rows_keep, cols_keep)]
+
+    return reduced_row_matrix,reduced_col_matrix,rows_keep,cols_keep
 
 
 def main() -> None:
