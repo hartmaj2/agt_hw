@@ -2,5 +2,7 @@ ruff.toml
 matplotlibrc
 
 .venv
+.DS_Store
 
 tests/__pycache__
+solutions/__pycache__
