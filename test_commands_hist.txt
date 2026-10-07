@@ -1,0 +1,16 @@
+ 1031  .env/bin/python -m pytest tests/test_week01_classic.py tests/test_week01_random.py -k evaluate_zero_sum
+ 1032  .env/bin/python -m pytest tests/test_week01_classic.py tests/test_week01_random.py -k best_response_agains_row
+ 1033  .env/bin/python -m pytest tests/test_week01_classic.py tests/test_week01_random.py -k evaluate_zero_sum
+ 1034  .env/bin/python -m pytest tests/test_week01_classic.py tests/test_week01_random.py -k best_response_against_row
+ 1035  .env/bin/python -m pytest tests/test_week01_classic.py tests/test_week01_random.py -k best_response_against_row
+ 1036  .env/bin/python -m pytest tests/test_week01_classic.py tests/test_week01_random.py -k best_response_against_row
+ 1037  .env/bin/python -m pytest tests/test_week01_classic.py tests/test_week01_random.py -k best_response_against_row
+ 1038  .env/bin/python -m pytest tests/test_week01_classic.py tests/test_week01_random.py -k best_response_against_row
+ 1039  .env/bin/python -m pytest tests/test_week01_classic.py tests/test_week01_random.py -k best_response_against_row
+ 1040  .env/bin/python -m pytest tests/test_week01_classic.py tests/test_week01_random.py -k best_response_against_row
+ 1041  .env/bin/python -m pytest tests/test_week01_classic.py tests/test_week01_random.py -k best_response_against_col
+ 1042  .env/bin/python -m pytest tests/test_week01_classic.py tests/test_week01_random.py -k evaluate_col_against_best_res
+ 1043  .env/bin/python -m pytest tests/test_week01_classic.py tests/test_week01_random.py -k evaluate_row_against_best_res
+ 1044  .env/bin/python -m pytest tests/test_week01_classic.py tests/test_week01_random.py -k evaluate_col_against_best_res
+ 1045  .env/bin/python -m pytest tests/test_week01_classic.py tests/test_week01_random.py -k evaluate_col_against_best_res
+ 1046  history
