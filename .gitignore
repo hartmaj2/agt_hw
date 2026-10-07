@@ -2,6 +2,5 @@ ruff.toml
 matplotlibrc
 
 .venv
-solutions
 
 tests/__pycache__
