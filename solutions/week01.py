@@ -170,7 +170,15 @@ def find_strictly_dominated_actions(matrix: np.ndarray) -> np.ndarray:
         Indices of strictly dominated actions
     """
 
-    raise NotImplementedError
+    indices = []
+    for i in range(matrix.shape[0]):
+        util_vect_i = matrix[i,:]
+        for j in range(matrix.shape[0]):
+            util_vect_j = matrix[j,:]
+            if np.all(util_vect_j > util_vect_i):
+                indices.append(i)
+                break
+    return np.array(indices,dtype=np.int64)
 
 
 def iterated_removal_of_dominated_strategies(
