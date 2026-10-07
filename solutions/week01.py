@@ -205,23 +205,5 @@ def iterated_removal_of_dominated_strategies(
 def main() -> None:
     pass
 
-    # row_matrix = np.array([
-    #     [ 0, -1,  1],
-    #     [ 1,  0, -1],
-    #     [-1,  1,  0],
-    # ])
-
-    # col_matrix = np.array([
-    #     [ 0,  1, -1],
-    #     [-1,  0,  1],
-    #     [ 1, -1,  0],
-    # ])
-
-    # row_strat = np.array([0, 0, 1])
-    # col_strat = np.array([0.8, 0.2, 0])
-
-    # evaluate_general_sum(row_matrix,col_matrix,row_strat,col_strat)
-
-
 if __name__ == '__main__':
     main()
