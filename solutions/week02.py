@@ -102,7 +102,7 @@ def verify_support(
 
     if result.success:
         x = result.x
-        return x
+        return x[:-1]
     else:
         # print(result.message)
         return None
@@ -133,9 +133,6 @@ def support_enumeration(
         row_supp_distrib = verify_support(col_matrix.T,col_support,row_support)
         if row_supp_distrib is None:
             return None
-        
-        col_supp_distrib = col_supp_distrib[:-1]
-        row_supp_distrib = row_supp_distrib[:-1]
 
         m = row_matrix.shape[0]
         n = row_matrix.shape[1]
