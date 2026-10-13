@@ -3,6 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.optimize as so
+import itertools as it
 
 
 def plot_best_response_value_function(row_matrix: np.ndarray, step_size: float) -> None:
@@ -103,7 +104,7 @@ def verify_support(
         x = result.x
         return x
     else:
-        print(result.message)
+        # print(result.message)
         return None
 
 def support_enumeration(
@@ -124,8 +125,59 @@ def support_enumeration(
         A list of strategy profiles corresponding to found Nash equilibria
     """
 
-    raise NotImplementedError
+    # checks whether these supports correspond to some nash equilibrium
+    def verify_supports(row_matrix: np.ndarray, col_matrix: np.ndarray, row_support : np.ndarray, col_support : np.ndarray) -> tuple[np.ndarray,np.ndarray] | None:
+        col_supp_distrib = verify_support(row_matrix,row_support,col_support)
+        if col_supp_distrib is None:
+            return None
+        row_supp_distrib = verify_support(col_matrix.T,col_support,row_support)
+        if row_supp_distrib is None:
+            return None
+        
+        col_supp_distrib = col_supp_distrib[:-1]
+        row_supp_distrib = row_supp_distrib[:-1]
 
+        m = row_matrix.shape[0]
+        n = row_matrix.shape[1]
+        row_distrib = create_strategy_from_support(row_supp_distrib,row_support,m)
+        col_distrib = create_strategy_from_support(col_supp_distrib,col_support,n)
+
+        if not is_br_against(row_matrix,row_distrib,col_distrib):
+            return None
+        if not is_br_against(col_matrix.T,col_distrib,row_distrib):
+            return None
+
+        return row_distrib,col_distrib
+
+    # checks if a given candidate_strategy is a best response against opponent_strategy, the matrix has values corresponding to utility of the guy with candidate strategy
+    def is_br_against(candidate_matrix: np.ndarray, candidate_strategy: np.ndarray, opponent_strategy: np.ndarray) -> bool:
+        candidate_action_utils = candidate_matrix @ opponent_strategy
+        candidate_utility = candidate_strategy @ candidate_action_utils
+        best_utility = candidate_action_utils.max()
+
+        is_br = candidate_utility >= best_utility - 1e-9 # we need this little constant to avoid floating point arithmetic errors
+
+        return bool(is_br)
+        
+    def create_strategy_from_support(support_distribution, support_indices, original_length):
+        res = np.zeros(original_length)
+        res[support_indices] = support_distribution
+        return res
+
+    equilibria = []
+
+    m = row_matrix.shape[0]
+    n = row_matrix.shape[1]
+    for k in range(1,m+1):
+        for s_1 in it.combinations(range(m),k):
+            for l in range(1,n+1):
+                for s_2 in it.combinations(range(n),l):
+                    tup = verify_supports(row_matrix,col_matrix,np.array(s_1),np.array(s_2))
+                    if tup is None:
+                        continue
+                    equilibria.append(tup)
+
+    return equilibria
 
 def main() -> None:
     pass
