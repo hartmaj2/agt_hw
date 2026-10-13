@@ -61,6 +61,11 @@ def verify_support(
         The opponent's strategy, if it exists, otherwise `None`
     """
 
+    def create_strategy_from_support(support_distribution, support_indices, original_length):
+        res = np.zeros(original_length)
+        res[support_indices] = support_distribution
+        return res
+
     # OBS: support enumeration LP consists of two independent sub LP's
     # one which computes probs of first player such that each pure action of other player leads to same value (for the second player)
     # second is analogous 
@@ -102,7 +107,7 @@ def verify_support(
 
     if result.success:
         x = result.x
-        return x
+        return create_strategy_from_support(x[:-1],col_support,matrix.shape[1])
     else:
         # print(result.message)
         return None
@@ -127,20 +132,12 @@ def support_enumeration(
 
     # checks whether these supports correspond to some nash equilibrium
     def verify_supports(row_matrix: np.ndarray, col_matrix: np.ndarray, row_support : np.ndarray, col_support : np.ndarray) -> tuple[np.ndarray,np.ndarray] | None:
-        col_supp_distrib = verify_support(row_matrix,row_support,col_support)
-        if col_supp_distrib is None:
+        col_distrib = verify_support(row_matrix,row_support,col_support)
+        if col_distrib is None:
             return None
-        row_supp_distrib = verify_support(col_matrix.T,col_support,row_support)
-        if row_supp_distrib is None:
+        row_distrib = verify_support(col_matrix.T,col_support,row_support)
+        if row_distrib is None:
             return None
-        
-        col_supp_distrib = col_supp_distrib[:-1]
-        row_supp_distrib = row_supp_distrib[:-1]
-
-        m = row_matrix.shape[0]
-        n = row_matrix.shape[1]
-        row_distrib = create_strategy_from_support(row_supp_distrib,row_support,m)
-        col_distrib = create_strategy_from_support(col_supp_distrib,col_support,n)
 
         if not is_br_against(row_matrix,row_distrib,col_distrib):
             return None
@@ -158,11 +155,6 @@ def support_enumeration(
         is_br = candidate_utility >= best_utility - 1e-9 # we need this little constant to avoid floating point arithmetic errors
 
         return bool(is_br)
-        
-    def create_strategy_from_support(support_distribution, support_indices, original_length):
-        res = np.zeros(original_length)
-        res[support_indices] = support_distribution
-        return res
 
     equilibria = []
 
