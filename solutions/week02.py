@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.optimize as so
 
 
 def plot_best_response_value_function(row_matrix: np.ndarray, step_size: float) -> None:
@@ -47,7 +48,7 @@ def verify_support(
     Parameters
     ----------
     matrix : np.ndarray
-        A payoff matrix of one of the players
+        A payoff matrix of one of the players (default is row player)
     row_support : np.ndarray
         The row player's support
     col_support : np.ndarray
@@ -59,8 +60,51 @@ def verify_support(
         The opponent's strategy, if it exists, otherwise `None`
     """
 
-    raise NotImplementedError
+    # OBS: support enumeration LP consists of two independent sub LP's
+    # one which computes probs of first player such that each pure action of other player leads to same value (for the second player)
+    # second is analogous 
 
+    # So this part of the program will create variables for the actions in the column players support (so we will find column players mixed strategy)
+    # we need that for each of the row players actions, the value of the convex combination of the parts of the matrix corresponding to the column players cols and this specific row is some variable v
+
+    # Vars
+    # 1. p_1,....,p_{col_support size}   (vars for the probabilities of column players actions)
+    # 2. v_row (var for the value that row player gets for every pure action (the value being determined by the the weighted probs of the column player weighted by the vals at the matrix position given by the row of pure action and col of this variable)
+
+    # Linear equations (and inequalities)
+    # 1. \sum {p_i} = 1
+    # 2. p_i > 0 for all i
+    # 3. for every pure action i of row player SUPPORT: p_1 * m_i,n_1 + p_2 * m_i,n_2 + ... + p_{col_support_size} * m_i,n_{col_support size} = v_row
+    # (n_j is index of the j_th action in the support)
+
+    support_submatrix = matrix[np.ix_(row_support, col_support)] # cut out just the necessary rows and columns
+
+    # add column of (-1,...,-1)^T as a last column of the matrix
+    support_submatrix = np.hstack((
+        support_submatrix,
+        -np.ones((support_submatrix.shape[0], 1))
+    ))
+
+    distrib_vector = np.append(np.ones(len(col_support)), 0) # 1. \sum {p_i} = 1
+
+
+    A = np.vstack((support_submatrix,distrib_vector))
+    b = np.append(np.zeros(len(row_support)), 1) # create the right hand sides (for the last equality \sum {p_i} = 1 we need to add the 1)
+
+    result = so.linprog(
+        c=np.zeros(A.shape[1]), # we don't care what the cost function is (we can just have all zeroes)
+        A_eq=A,
+        b_eq=b,
+        bounds=[(0, None)] * len(col_support) + [(None, None)], # the bounds are just 0 from below for each p_i and no bound for v_row
+        method="highs"
+    )
+
+    if result.success:
+        x = result.x
+        return x
+    else:
+        print(result.message)
+        return None
 
 def support_enumeration(
     row_matrix: np.ndarray, col_matrix: np.ndarray
