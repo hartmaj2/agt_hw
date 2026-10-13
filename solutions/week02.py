@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def plot_best_response_value_function(row_matrix: np.ndarray, step_size: float) -> None:
@@ -14,7 +15,20 @@ def plot_best_response_value_function(row_matrix: np.ndarray, step_size: float) 
         The step size for the probability of the first action of the row player
     """
 
-    raise NotImplementedError
+    def create_plot(probs : list[float], br_vals : list[float]) -> None:
+        plt.plot(probs,br_vals)
+        plt.show()
+
+
+    probs = np.arange(0,1+step_size,step_size,dtype=float)
+    br_vals = []
+
+    for prob in probs:
+        prob_vect = np.array([prob,1-prob])
+        vals = prob_vect @ row_matrix
+        br_vals.append(vals.min()) # the column player chooses the response which MINIMIZES row players utility
+        
+    create_plot(list(probs),br_vals)
 
 
 def verify_support(
