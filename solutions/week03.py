@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import numpy as np
+import week01 as w1
 
 
 def compute_deltas(
@@ -28,7 +29,20 @@ def compute_deltas(
         Each player's incentive to deviate
     """
 
-    raise NotImplementedError
+
+    row_br = w1.calculate_best_response_against_col(row_matrix,col_strategy)
+    col_br = w1.calculate_best_response_against_row(col_matrix,row_strategy)
+
+    row_utility, col_utility = w1.evaluate_general_sum(row_matrix,col_matrix,row_strategy,col_strategy)
+    row_br_utility, _ = w1.evaluate_general_sum(row_matrix,col_matrix,row_br,col_strategy)
+
+    _, col_br_utility = w1.evaluate_general_sum(row_matrix,col_matrix,row_strategy,col_br)
+
+
+    # we use the fact, that if there is to be a best response \pi of one player to a strategy, then
+    # there exists pure stategy a which yields same value as \pi
+
+    return np.array([row_br_utility-row_utility,col_br_utility-col_utility])
 
 
 def compute_nash_conv(
@@ -56,7 +70,7 @@ def compute_nash_conv(
         The NashConv value of the given strategy profile
     """
 
-    raise NotImplementedError
+    return np.sum(compute_deltas(row_matrix,col_matrix,row_strategy,col_strategy))
 
 
 def compute_exploitability(
@@ -84,7 +98,7 @@ def compute_exploitability(
         The exploitability value of the given strategy profile
     """
 
-    raise NotImplementedError
+    return compute_nash_conv(row_matrix,col_matrix,row_strategy,col_strategy) / 2
 
 
 def fictitious_play(
