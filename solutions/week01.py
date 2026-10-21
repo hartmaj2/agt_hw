@@ -99,11 +99,13 @@ def calculate_best_response_against_col(
         The row player's best response
     """
 
-    exp_util_col = row_matrix @ col_strategy
-    best_action_index = np.argmax(exp_util_col)
-    best_strategy = np.zeros(row_matrix.shape[0])
-    best_strategy[best_action_index] = 1
-    return best_strategy
+    # exp_util_col = row_matrix @ col_strategy
+    # best_action_index = np.argmax(exp_util_col)
+    # best_strategy = np.zeros(row_matrix.shape[0])
+    # best_strategy[best_action_index] = 1
+    # return best_strategy
+
+    return calculate_best_response_against_row(row_matrix.T,col_strategy)
 
 
 def evaluate_row_against_best_response(
