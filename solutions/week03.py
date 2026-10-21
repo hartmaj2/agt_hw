@@ -2,6 +2,7 @@
 
 import numpy as np
 import week01 as w1
+import matplotlib.pyplot as plt
 
 
 def compute_deltas(
@@ -181,7 +182,12 @@ def plot_exploitability(
         A sequence of exploitability values, one for each strategy profile
     """
 
-    raise NotImplementedError
+    exploitabilities = [compute_exploitability(row_matrix,col_matrix,row,col) for row,col in strategies]
+
+    plt.plot(range(len(strategies)),exploitabilities)
+    plt.show()
+
+    return exploitabilities
 
 
 def main() -> None:
