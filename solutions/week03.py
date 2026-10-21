@@ -128,7 +128,32 @@ def fictitious_play(
         The sequence of average strategy profiles produced by the algorithm
     """
 
-    raise NotImplementedError
+    def compute_next_strategies(row_matrix,col_matrix,avg_row_strat,avg_col_strat):
+        row_next = w1.calculate_best_response_against_col(row_matrix,avg_col_strat)
+        col_next = w1.calculate_best_response_against_row(col_matrix,avg_row_strat)
+        return row_next,col_next
+
+    row_init_str = np.ones(row_matrix.shape[0]) / row_matrix.shape[0]
+    col_init_str = np.ones(row_matrix.shape[1]) / row_matrix.shape[1]
+
+    cur_row_str = row_init_str
+    cur_col_str = col_init_str
+
+    avg_row_str = row_init_str
+    avg_col_str = col_init_str
+
+    avg_strategies = []
+
+    for i in range(num_iters):
+        if naive:
+            cur_row_str, cur_col_str = compute_next_strategies(row_matrix,col_matrix,cur_row_str,cur_col_str)
+        else:
+            cur_row_str, cur_col_str = compute_next_strategies(row_matrix,col_matrix,avg_row_str,avg_col_str)
+        avg_row_str += (cur_row_str - avg_row_str) / (i + 1)
+        avg_col_str += (cur_col_str - avg_col_str) / (i + 1)
+        avg_strategies.append((avg_row_str.copy(),avg_col_str.copy()))
+
+    return avg_strategies
 
 
 def plot_exploitability(
